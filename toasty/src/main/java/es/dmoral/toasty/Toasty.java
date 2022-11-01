@@ -12,7 +12,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import android.os.Build;
-import android.util.TypedValue;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -300,7 +300,7 @@ public class Toasty {
 
     @SuppressLint("ShowToast")
     @CheckResult
-    public static Toast custom(@NonNull Context context, @NonNull CharSequence message, Drawable icon,
+    public static Toast custom(@NonNull Context context, @NonNull CharSequence title, @NonNull CharSequence message, Drawable icon,
                                @ColorInt int tintColor, @ColorInt int textColor, int duration,
                                boolean withIcon, boolean shouldTint) {
         final Toast currentToast = Toast.makeText(context, "", duration);
@@ -309,6 +309,7 @@ public class Toasty {
         final LinearLayout toastRoot = toastLayout.findViewById(R.id.toast_root);
         final ImageView toastIcon = toastLayout.findViewById(R.id.toast_icon);
         final TextView toastTextView = toastLayout.findViewById(R.id.toast_text);
+        final TextView toastTitleTextView = toastLayout.findViewById(R.id.toast_title);
         Drawable drawableFrame;
 
         if (shouldTint)
@@ -330,7 +331,14 @@ public class Toasty {
         toastTextView.setText(message);
         toastTextView.setTextColor(textColor);
         toastTextView.setTypeface(currentTypeface);
-        toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        if (TextUtils.isEmpty(title)) {
+            toastTitleTextView.setVisibility(View.GONE);
+        } else {
+            toastTitleTextView.setTextColor(textColor);
+            toastTitleTextView.setText(title);
+        }
+
+//        toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 
         currentToast.setView(toastLayout);
 
@@ -348,6 +356,14 @@ public class Toasty {
         );
 
         return currentToast;
+    }
+
+    @SuppressLint("ShowToast")
+    @CheckResult
+    public static Toast custom(@NonNull Context context, @NonNull CharSequence message, Drawable icon,
+                               @ColorInt int tintColor, @ColorInt int textColor, int duration,
+                               boolean withIcon, boolean shouldTint) {
+        return custom(context, "", message, icon, tintColor, textColor, duration, withIcon, shouldTint);
     }
 
     private static Toast normalWithDarkThemeSupport(@NonNull Context context, @NonNull CharSequence message, Drawable icon,
@@ -435,7 +451,7 @@ public class Toasty {
             this.allowQueue = allowQueue;
             return this;
         }
-      
+
         @CheckResult
         public Config setGravity(int gravity, int xOffset, int yOffset) {
             this.toastGravity = gravity;
@@ -443,7 +459,7 @@ public class Toasty {
             this.yOffset = yOffset;
             return this;
         }
-      
+
         @CheckResult
         public Config setGravity(int gravity) {
             this.toastGravity = gravity;
@@ -455,7 +471,7 @@ public class Toasty {
             this.supportDarkTheme = supportDarkTheme;
             return this;
         }
-         
+
         public Config setRTL(boolean isRTL) {
             this.isRTL = isRTL;
             return this;

@@ -27,5 +27,5 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
     testImplementation 'junit:junit:4.12'
 //    implementation project(':toasty')
-    implementation 'com.github.xxhong:Toasty:2.0.0'
+    implementation 'com.github.xxhong:Toasty:2.0.1'
 }
